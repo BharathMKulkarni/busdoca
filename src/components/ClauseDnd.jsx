@@ -34,15 +34,15 @@ const style = {
 
 
 function ClauseDnd() {
-  const [clausesList, setClausesList] = useState(clauses)
+  const [clausesList, setClausesList] = useState([]);
   const columnsFromBackend = {
     1: {
       name: "New Document",
-      items: [],
+      items: clausesList,
     },
     2: {
       name: "Clause Library",
-      items: clausesList,
+      items: clauses,
     },
   };
   const [columns, setColumns] = useState(columnsFromBackend);
@@ -112,6 +112,7 @@ function ClauseDnd() {
           items: destItems,
         },
       });
+      setClausesList(destItems);
     }
     //  else {
     //   const column = columns[source.droppableId];

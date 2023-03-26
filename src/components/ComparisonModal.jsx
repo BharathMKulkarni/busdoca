@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
@@ -40,6 +40,9 @@ export default function ComparisonModal({firstVariant, secondVariant, clausesLis
   const [open, setOpen] = useState(false)
   const [variant1, setVariant1] = useState({})
   const [variant2, setVariant2] = useState({})
+  const [firstVariantSelected, setFirstVariantSelected] = useState(false);
+  const [secondVariantSelected, setSecondVariantSelected] = useState(false);
+
 
   const handleCompareButton = () => {
     setVariant1(firstVariant)
@@ -48,28 +51,54 @@ export default function ComparisonModal({firstVariant, secondVariant, clausesLis
   }
 
   const choseFirstVariant = () => {
-    const clause = _.find(clausesList, {id: clauseId})
-    const index = _.findIndex(clausesList, {id: clauseId})
-    clause.paragraph = firstVariant.content
-    const clausesListCopy = clausesList
-    clausesListCopy.splice(index, 1, clause)
-    setClausesList(clausesListCopy)
+    // const clause = _.find(clausesList, {id: clauseId})
+    // const index = _.findIndex(clausesList, {id: clauseId})
+    // clause.paragraph = firstVariant.content
+    // const clausesListCopy = clausesList
+    // clausesListCopy.splice(index, 1, clause)
+    // setClausesList(clausesListCopy)
+    setFirstVariantSelected(true);
     setOpen(false)
 
     console.log(clausesList)
   }
 
   const choseSecondVariant = () => {
-    const clause = _.find(clausesList, {id: clauseId})
-    const index = _.findIndex(clausesList, {id: clauseId})
-    clause.paragraph = secondVariant.content
-    const clausesListCopy = clausesList
-    clausesListCopy.splice(index, 1, clause)
-    setClausesList(clausesListCopy)
+    // const clause = _.find(clausesList, {id: clauseId})
+    // const index = _.findIndex(clausesList, {id: clauseId})
+    // clause.paragraph = secondVariant.content
+    // const clausesListCopy = clausesList
+    // clausesListCopy.splice(index, 1, clause)
+    // setClausesList(clausesListCopy)
+    setSecondVariantSelected(true);
     setOpen(false)
 
     console.log(clausesList)
   }
+  useEffect(() => {
+    if(firstVariantSelected){
+      console.log('1')
+      const clause = _.find(clausesList, {id: clauseId})
+      const index = _.findIndex(clausesList, {id: clauseId})
+      clause.paragraph = firstVariant.content
+      const clausesListCopy = clausesList
+      clausesListCopy.splice(index, 1, clause)
+      setClausesList(clausesListCopy)
+    }
+    if(secondVariantSelected){
+      console.log('2')
+      const clause = _.find(clausesList, {id: clauseId})
+      const index = _.findIndex(clausesList, {id: clauseId})
+      console.log(clauseId);
+      clause.paragraph = secondVariant.content
+      const clausesListCopy = clausesList
+      clausesListCopy.splice(index, 1, clause)
+      setClausesList(clausesListCopy)
+    }
+
+
+
+ }, [firstVariantSelected,secondVariantSelected])
 
   const handleClose = () => setOpen(false);
   return (
