@@ -15,6 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import SelectVariants from "./SelectVariants";
 import { clauses } from '../data/clauses'
+import EditClause from "./EditClause";
 
 
 const style = {
@@ -128,10 +129,7 @@ function ClauseDnd() {
     //   });
     // }
   };
-  const onFieldValueChange = (e, index) => {
-    fieldsData[index].value = e.target.value;
-    setFieldsData([...fieldsData]);
-  };
+
 
   // const MultiSelect = () =>{
   //   <ReactMultiSelectCheckboxes options={options}/>
@@ -139,6 +137,7 @@ function ClauseDnd() {
  
  return (
     <div style={{ display: "flex", justifyContent: "right", height: "100%" }}>
+      {/* --------- EDIT CLAUSE ------------- */}
       <div
         style={{
           display: "flex",
@@ -148,56 +147,11 @@ function ClauseDnd() {
         }}
       >
         <Stack>
-          {/* <div
-                  // className="hideScroll"
-                  style={{
-                    background: "lightgrey",
-                    padding: 8,
-                    width: "18vw",
-                    maxHeight: 800,
-                    minHeight: 800,
-                    // overflowY: "scroll",
-                  }}
-                > */}
-          {selectedClause && (
-            <Box>
-              <h2>Field Settings</h2>
-
-              {fieldsData.map((ele, index) => (
-                <Box key={index}>
-                  <Typography variant="subtitle1">{ele.label}</Typography>
-                  <TextField
-                    variant="outlined"
-                    value={ele.value}
-                    onChange={(e) => onFieldValueChange(e, index)}
-                  />
-                </Box>
-              ))}
-              <Stack spacing={2} mt="1rem" direction="row">
-                <Button
-                  onClick={() => {
-                    clauses[selectedClause.index].dynamicFields =
-                      fieldsData;
-                    setSelectedClause(null);
-                    setFieldsData([]);
-                  }}
-                >
-                  Save
-                </Button>
-                <Button
-                  onClick={() => {
-                    setSelectedClause(null);
-                    setFieldsData([]);
-                  }}
-                >
-                  Discard
-                </Button>
-              </Stack>
-            </Box>
-          )}
-          {/* </div> */}
+          {selectedClause && ( <EditClause  fieldsData={fieldsData} setFieldsData={setFieldsData}/> )}
         </Stack>
       </div>
+
+      {/* ------------ NEW DOCUMENT -------------- */}
       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
@@ -312,6 +266,8 @@ function ClauseDnd() {
             alignItems: "center",
           }}
         >
+
+          {/* ---------- CLAUSE LIBRARY ----------- */}
           <h2>Clause Library</h2>
           <div className="hideScroll" style={{ margin: 8 }}>
             <Droppable droppableId="2">
