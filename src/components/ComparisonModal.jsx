@@ -34,9 +34,9 @@ const newStyles = {
   }
 };
 
-export default function ComparisonModal({firstVariant, secondVariant}) {
+export default function ComparisonModal({firstVariant, secondVariant, clausesList, setClausesList, clauseId}) {
   console.log('inside comparison modal: ', 'firstVariant: ', firstVariant, 'secondVariant: ', secondVariant)
-  const [selectedVariantName, setSelectedVariantName] = useState("")
+  // const [selectedVariantName, setSelectedVariantName] = useState("")
   const [open, setOpen] = useState(false)
   const [variant1, setVariant1] = useState({})
   const [variant2, setVariant2] = useState({})
@@ -48,10 +48,27 @@ export default function ComparisonModal({firstVariant, secondVariant}) {
   }
 
   const choseFirstVariant = () => {
-    selectedVariantName("")
+    const clause = _.find(clausesList, {id: clauseId})
+    const index = _.findIndex(clausesList, {id: clauseId})
+    clause.paragraph = firstVariant.content
+    const clausesListCopy = clausesList
+    clausesListCopy.splice(index, 1, clause)
+    setClausesList(clausesListCopy)
+    setOpen(false)
+
+    console.log(clausesList)
   }
+
   const choseSecondVariant = () => {
-    selectedVariantName("")
+    const clause = _.find(clausesList, {id: clauseId})
+    const index = _.findIndex(clausesList, {id: clauseId})
+    clause.paragraph = secondVariant.content
+    const clausesListCopy = clausesList
+    clausesListCopy.splice(index, 1, clause)
+    setClausesList(clausesListCopy)
+    setOpen(false)
+
+    console.log(clausesList)
   }
 
   const handleClose = () => setOpen(false);

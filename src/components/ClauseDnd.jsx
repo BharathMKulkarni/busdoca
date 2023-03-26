@@ -17,7 +17,6 @@ import SelectVariants from "./SelectVariants";
 import { clauses } from '../data/clauses'
 import EditClause from "./EditClause";
 
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -30,27 +29,26 @@ const style = {
   p: 4,
 };
 
-const columnsFromBackend = {
-  1: {
-    name: "New Document",
-    items: [],
-  },
-  2: {
-    name: "Clause Library",
-    items: clauses,
-  },
-};
+
 
 
 
 function ClauseDnd() {
+  const [clausesList, setClausesList] = useState(clauses)
+  const columnsFromBackend = {
+    1: {
+      name: "New Document",
+      items: [],
+    },
+    2: {
+      name: "Clause Library",
+      items: clausesList,
+    },
+  };
   const [columns, setColumns] = useState(columnsFromBackend);
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
   const [fieldsData, setFieldsData] = useState([]);
   const [selectedClause, setSelectedClause] = useState(null);
-  
-   
+
 
   // const [selectedVariants, setSelectedVariants] = useState([]);
   // const [variants, setVariants] = useState([
@@ -84,10 +82,10 @@ function ClauseDnd() {
   // };
   
   const getFieldValues = (paragraph, fields) => {
-    // fields.forEach((ele) => {}
     fields.forEach((ele) => {
       paragraph = paragraph.replaceAll(ele.id, ele.value);
     });
+    
     return paragraph;
   };
 
@@ -201,9 +199,9 @@ function ClauseDnd() {
                           justifyContent="space-around"
                           alignItems="center"
                         >
-                          <IconButton>
+                          {/* <IconButton>
                             <VisibilityOutlinedIcon size="small" />
-                          </IconButton>
+                          </IconButton> */}
 
                           <IconButton
                             onClick={() => {
@@ -211,46 +209,37 @@ function ClauseDnd() {
                               let fields = structuredClone(item.dynamicFields);
                               setFieldsData(fields);
                             }}
-                            size="small"
+                            size="large"
                           >
                             <ModeEditOutlinedIcon size ="small"/>
                           </IconButton>
                           <IconButton>
                             <DeleteOutlineOutlinedIcon size="small" />
                           </IconButton>
-                          
-                          {/* <IconButton onClick={compareVariants}>
-                            <CompareIcon />
-                          </IconButton> */}
-                          <div id="compare"></div>
                         </Stack>
                       </Stack>
+                      {/* -- clause accordian */}
                       <div>
                         <Accordion>
                           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography>
-                              Terms and Policies .....xyzabc
+                              {item.name}
                             </Typography>
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>
                               {getFieldValues(
                                 item.paragraph,
-                                item.dynamicFields
+                                item.dynamicFields,
+                                item.id
                               )}
                             </Typography>
                           </AccordionDetails>
                         </Accordion>
                       </div>
-                      <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="title"
-                        aria-describedby="description"
-                      >
-                        <Box sx={style}></Box>
-                      </Modal>
-                      <SelectVariants />
+                      <Stack alignItems="center" justifyContent="center">
+                        <SelectVariants clausesList={clausesList} setClausesList={setClausesList} clauseId={item.id}/>
+                      </Stack>
                     </div>
                   ))}
                   {provided.placeholder}
@@ -259,6 +248,8 @@ function ClauseDnd() {
             </Droppable>
           </div>
         </div>
+
+        {/* ---------- CLAUSE LIBRARY ----------- */}
         <div
           style={{
             display: "flex",
@@ -266,8 +257,6 @@ function ClauseDnd() {
             alignItems: "center",
           }}
         >
-
-          {/* ---------- CLAUSE LIBRARY ----------- */}
           <h2>Clause Library</h2>
           <div className="hideScroll" style={{ margin: 8 }}>
             <Droppable droppableId="2">
