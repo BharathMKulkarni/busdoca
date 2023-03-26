@@ -23,7 +23,7 @@ export const clauses = [
     name: "Clause2",
     dynamicFields: [
       { label: "Candidate_name", id: "${Candidate_name}", value: "Shreya" },
-      { label: "Company_name", id: "${Company_name}", value: "Oracle" },
+      { label: "Companyy_name", id: "${Company_name}", value: "Oracle" },
       { label: "Job_title", id: " ${Job_title}", value: "ASE" },
       {
         label: "Start_date",
