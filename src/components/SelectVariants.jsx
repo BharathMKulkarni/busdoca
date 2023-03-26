@@ -30,27 +30,36 @@ export default function SelectVariants() {
 
   const [firstVariant, setFirstVariant] = useState({})
   const [secondVariant, setSecondVariant] = useState({})
+  const [variantSelected, setVariantSelected] = useState(false);
 
   // TODO: fix : push the values to state instead to avoid first value not getting stored
   const handleChangeFirstVariant = (event) => {
     console.log(event.target.value)
     const selectedValue = event.target.value
     setfirstVariantName(selectedValue)
-    const firstVariantSelected = _.find(variants, {variantName: firstVariantName})
-    setFirstVariant(firstVariantSelected)
-
-    console.log("firstVariantName: ", firstVariantName)
+    // console.log("firstVariantName: ", firstVariantName);
   };
-
   const handleChangeSecondVariant = (event) => {
     console.log(event.target.value)
     const selectedValues = event.target.value
     setSecondVariantName(selectedValues)
+    // console.log("secondVariantName: ", secondVariantName)
+  };
+  useEffect(() => {
+    const firstVariantSelected = _.find(variants, {variantName: firstVariantName});
+    setFirstVariant(firstVariantSelected);
     const secondVariantSelected = _.find(variants, {variantName: secondVariantName})
     setSecondVariant(secondVariantSelected)
+    console.log("firstVariantName: ", firstVariantName);
+    console.log("secondVariantName: ", secondVariantName);
+    // console.log(firstVariantName.length);
+    if(firstVariantName.length != 0 && secondVariantName.length != 0){
+      console.log("1st",firstVariant);
+      console.log("2nd",secondVariant);
+      setVariantSelected(true);
+    } 
 
-    console.log("secondVariantName: ", secondVariantName)
-  };
+ }, [firstVariantName, secondVariantName])
 
   return (
     <div>
@@ -99,7 +108,7 @@ export default function SelectVariants() {
         </Select>
       </FormControl>
       {
-        (!_.isEmpty(firstVariant) && !_.isEmpty(secondVariant)) && <ComparisonModal firstVariant={firstVariant}  secondVariant={secondVariant} />
+        (variantSelected) && <ComparisonModal firstVariant={firstVariant}  secondVariant={secondVariant} />
       }
     </div>
   );
