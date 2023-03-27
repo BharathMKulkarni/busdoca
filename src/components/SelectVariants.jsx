@@ -24,7 +24,7 @@ const MenuProps = {
   },
 };
 
-export default function SelectVariants({clausesList, setClausesList, clauseId}) {
+export default function SelectVariants({clausesList, setClausesList, clauseId, rowId}) {
   const [firstVariantName, setfirstVariantName] = useState("")
   const [secondVariantName, setSecondVariantName] = useState("")
 
@@ -108,7 +108,7 @@ export default function SelectVariants({clausesList, setClausesList, clauseId}) 
         </Select>
       </FormControl>
       {
-        (variantSelected) && <ComparisonModal firstVariant={firstVariant}  secondVariant={secondVariant} clausesList={clausesList} setClausesList={setClausesList} clauseId={clauseId}/>
+        (variantSelected) && <ComparisonModal firstVariant={firstVariant}  secondVariant={secondVariant} clausesList={clausesList} setClausesList={setClausesList} clauseId={clauseId} rowId={rowId}/>
       }
     </div>
   );

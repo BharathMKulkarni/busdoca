@@ -1,5 +1,5 @@
 import { IconButton, Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import SelectVariants from "./SelectVariants";
 import { clauses } from '../data/clauses'
 import EditClause from "./EditClause";
+import _ from "lodash";
 
 const style = {
   position: "absolute",
@@ -29,12 +30,11 @@ const style = {
   p: 4,
 };
 
-
-
-
-
 function ClauseDnd() {
   const [clausesList, setClausesList] = useState([]);
+  const [deleteIndex, setDeleteIndex] = useState(-1);
+  const [deleteButtonClicked, setDeleteButtonClicked] = useState(false);
+
   const columnsFromBackend = {
     1: {
       name: "New Document",
@@ -45,41 +45,18 @@ function ClauseDnd() {
       items: clauses,
     },
   };
+
+  useEffect(()=> {
+    if(deleteButtonClicked) {
+      let clausesListCopy = clausesList
+      _.remove(clausesListCopy, (c) => c.id !== deleteIndex)
+      setClausesList(clausesListCopy)
+    }
+  }, [deleteButtonClicked])
+
   const [columns, setColumns] = useState(columnsFromBackend);
   const [fieldsData, setFieldsData] = useState([]);
   const [selectedClause, setSelectedClause] = useState(null);
-
-
-  // const [selectedVariants, setSelectedVariants] = useState([]);
-  // const [variants, setVariants] = useState([
-  //   "Hi I am variant1",
-  //   "Hi I am variant2",
-  //   "variant3",
-  // ]);
-
-  // const compareVariants = () => {
-  //   const words1 = selectedVariants[0].split(" ");
-  //   const words2 = selectedVariants[1].split(" ");
-  //   let str = "";
-  //   const diff = words1.map((word, i) => {
-  //     if (word !== words2[i]) {
-  //       str += `<span key=${i} style="background-color:yellow;">${word}${" "}</span>`;
-  //       return (
-  //         <span key={i} style={{ backgroundColor: "yellow" }}>
-  //           {word}{" "}
-  //         </span>
-  //       );
-  //     } else {
-  //       str += `<span key=${i}>${word} </span>`;
-  //       return <span key={i}>{word} </span>;
-  //     }
-  //   });
-  //   console.log(str);
-  //   document.getElementById("compare").innerHTML = str;
-  //   // diff.map((data)=>{
-
-  //   // })
-  // };
   
   const getFieldValues = (paragraph, fields) => {
     fields.forEach((ele) => {
@@ -96,23 +73,25 @@ function ClauseDnd() {
     if (source.droppableId !== destination.droppableId) {
       const sourceColumn = columns[source.droppableId];
       const destColumn = columns[destination.droppableId];
-      const sourceItems = [...sourceColumn.items];
+      // const sourceItems = [...sourceColumn.items];
       const destItems = [...destColumn.items];
-      let removed = sourceItems[source.index];
-      removed = { id: uuid(), ...removed };
+      let removed = clauses[source.index];
+      removed = { id: uuid(), ...removed};
+      // console.log('source index: ', source.index)
       destItems.push(removed);
+      setClausesList(destItems);
       setColumns({
         ...columns,
         [source.droppableId]: {
           ...sourceColumn,
-          items: sourceItems,
+          items: clauses,
         },
         [destination.droppableId]: {
           ...destColumn,
           items: destItems,
         },
       });
-      setClausesList(destItems);
+      console.log("clausesList:::::::", clausesList)
     }
     //  else {
     //   const column = columns[source.droppableId];
@@ -129,10 +108,6 @@ function ClauseDnd() {
     // }
   };
 
-
-  // const MultiSelect = () =>{
-  //   <ReactMultiSelectCheckboxes options={options}/>
-  // };
  
  return (
     <div style={{ display: "flex", justifyContent: "right", height: "100%" }}>
@@ -180,7 +155,7 @@ function ClauseDnd() {
                     overflowY: "scroll",
                   }}
                 >
-                  {columns["1"].items.map((item, index) => (
+                  {clausesList.map((item, index) => (
                     <div
                       className="hideScroll"
                       style={{
@@ -214,7 +189,12 @@ function ClauseDnd() {
                           >
                             <ModeEditOutlinedIcon size ="small"/>
                           </IconButton>
-                          <IconButton>
+                          <IconButton
+                            onClick={() => {
+                              setDeleteButtonClicked(true)
+                              setDeleteIndex(item.id)
+                            }}
+                          >
                             <DeleteOutlineOutlinedIcon size="small" />
                           </IconButton>
                         </Stack>
@@ -239,7 +219,7 @@ function ClauseDnd() {
                         </Accordion>
                       </div>
                       <Stack alignItems="center" justifyContent="center">
-                        <SelectVariants clausesList={clausesList} setClausesList={setClausesList} clauseId={item.id}/>
+                        <SelectVariants clausesList={clausesList} setClausesList={setClausesList} clauseId={item.id} rowId={index}/>
                       </Stack>
                     </div>
                   ))}

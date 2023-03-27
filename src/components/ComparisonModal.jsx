@@ -11,6 +11,7 @@ import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 // import 'prismjs/components/prism-json';
 import _ from "lodash";
 import { Typography } from "@mui/material";
+import { clauses } from "../data/clauses";
 
 
 const style = {
@@ -34,7 +35,7 @@ const newStyles = {
   }
 };
 
-export default function ComparisonModal({firstVariant, secondVariant, clausesList, setClausesList, clauseId}) {
+export default function ComparisonModal({firstVariant, secondVariant, clausesList, setClausesList, clauseId, rowId}) {
   console.log('inside comparison modal: ', 'firstVariant: ', firstVariant, 'secondVariant: ', secondVariant)
   // const [selectedVariantName, setSelectedVariantName] = useState("")
   const [open, setOpen] = useState(false)
@@ -51,52 +52,43 @@ export default function ComparisonModal({firstVariant, secondVariant, clausesLis
   }
 
   const choseFirstVariant = () => {
-    // const clause = _.find(clausesList, {id: clauseId})
-    // const index = _.findIndex(clausesList, {id: clauseId})
-    // clause.paragraph = firstVariant.content
-    // const clausesListCopy = clausesList
-    // clausesListCopy.splice(index, 1, clause)
-    // setClausesList(clausesListCopy)
     setFirstVariantSelected(true);
     setOpen(false)
-
     console.log(clausesList)
   }
 
   const choseSecondVariant = () => {
-    // const clause = _.find(clausesList, {id: clauseId})
-    // const index = _.findIndex(clausesList, {id: clauseId})
-    // clause.paragraph = secondVariant.content
-    // const clausesListCopy = clausesList
-    // clausesListCopy.splice(index, 1, clause)
-    // setClausesList(clausesListCopy)
     setSecondVariantSelected(true);
     setOpen(false)
-
     console.log(clausesList)
   }
+
   useEffect(() => {
     if(firstVariantSelected){
       console.log('1')
-      const clause = _.find(clausesList, {id: clauseId})
-      const index = _.findIndex(clausesList, {id: clauseId})
+      const clause = _.find(clauses, {id: clauseId})
+      // const index = _.findIndex(clausesList, {id: clauseId})
+      const index = rowId
+      console.log('rowId passed: ', index)
       clause.paragraph = firstVariant.content
       const clausesListCopy = clausesList
       clausesListCopy.splice(index, 1, clause)
+      console.log("clausesListCopy: ", clausesListCopy)
       setClausesList(clausesListCopy)
     }
     if(secondVariantSelected){
       console.log('2')
-      const clause = _.find(clausesList, {id: clauseId})
-      const index = _.findIndex(clausesList, {id: clauseId})
+      const clause = _.find(clauses, {id: clauseId})
+      // const index = _.findIndex(clausesList, {id: clauseId})
+      const index = rowId
+      console.log('rowId passed: ', index)
       console.log(clauseId);
       clause.paragraph = secondVariant.content
       const clausesListCopy = clausesList
       clausesListCopy.splice(index, 1, clause)
+      console.log("clausesListCopy: ", clausesListCopy)
       setClausesList(clausesListCopy)
     }
-
-
 
  }, [firstVariantSelected,secondVariantSelected])
 
